@@ -13,16 +13,29 @@ function App() {
   const [availablePlaces, setAvailablePlaces] = useState([]);
   const [pickedPlaces, setPickedPlaces] = useState([]);
 
-  //Not a good solution
-  navigator.geolocation.getCurrentPosition((position) => {
-    const sortedPlaces = sortPlacesByDistance(
-      AVAILABLE_PLACES,
-      position.coords.latitude,
-      position.coords.longitude
-    );
-    console.log(sortedPlaces);
-    return setAvailablePlaces(sortedPlaces);
-  });
+  //Not a good solution because it render infinite loops so use inside useEffect
+  // navigator.geolocation.getCurrentPosition((position) => {
+  //   const sortedPlaces = sortPlacesByDistance(
+  //     AVAILABLE_PLACES,
+  //     position.coords.latitude,
+  //     position.coords.longitude
+  //   );
+  //   console.log(sortedPlaces);
+  //   return setAvailablePlaces(sortedPlaces);
+  // });
+
+  //good solution
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const sortedPlaces = sortPlacesByDistance(
+        AVAILABLE_PLACES,
+        position.coords.latitude,
+        position.coords.longitude
+      );
+
+      return setAvailablePlaces(sortedPlaces);
+    });
+  }, []);
 
   function handleStartRemovePlace(id) {
     modal.current.open();
